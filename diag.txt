@@ -1,0 +1,14 @@
+GUEST
+name - String
+
+
+ROOM
+name - String
+spaces - Integer
+guests - Array
+songs - Array
+
+
+SONG
+artist - String
+title - String
