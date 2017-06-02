@@ -6,26 +6,38 @@ require_relative('../song')
 class TestRoom < MiniTest::Test
 
   def setup
-    @guest_glen = Guest.new("Glen")
-    @guest_martin = Guest.new("Martin")
-    guest_tom = Guest.new("Tom")
-    @guests = [@guest_glen, @guest_martin, guest_tom]
-    @room_101 = Room.new("101", 1)
-    @room_glencoe = Room.new("Glencoe", 5)
-    @room_nevis = Room.new("Nevis", 10)
+    Room.reset_rooms
     @song_bjm = Song.new("Brian Jonestown Massacre", "Animone")
     @song_tff = Song.new("Tears for Fears", "Mad World")
     @song_cw = Song.new("Chip Wickham", "Red Planet")
     @song_hm = Song.new("Happy Mondays", "Step On")
-    @room_glencoe.check_in_guests(@guests)
+
+    @guest_glen = Guest.new("Glen")
+    @guest_martin = Guest.new("Martin")
+    @guest_tom = Guest.new("Tom")
+    guests = [@guest_glen, @guest_martin]
+
+    @room_glencoe = Room.new("Glencoe", 2, 40)
+    @room_nevis = Room.new("Nevis", 10, 100)
+
+    @room_glencoe.check_in_guests(guests)
+  end
+
+  def test_room_class_returns_rooms
+    assert_equal("Nevis", Room.rooms[1])
+  end
+
+  def test_reset_rooms
+    Room.reset_rooms
+    assert_equal([], Room.rooms)
   end
 
   def test_get_room_name
-    assert_equal("101", @room_101.name)
+    assert_equal("Glencoe", @room_glencoe.name)
   end
 
-  def test_get_seats
-    assert_equal(1, @room_101.seats)
+  def test_seats_available
+    assert_equal(0, @room_glencoe.seats_available)
   end
 
   def test_add_song
@@ -34,16 +46,22 @@ class TestRoom < MiniTest::Test
   end
 
   def test_check_in_guests
-    assert_equal(3, @room_glencoe.guests.count)
+    assert_equal(2, @room_glencoe.guests.count)
   end
 
-  def test_check_out_guests
-    @room_glencoe.check_out_guests([@guest_martin, @guest_glen])
-    assert_equal("Tom", @room_glencoe.guests[0].name)
+  def test_check_in_guests__no_seats_available
+    assert_equal("No room at the inn!", @room_glencoe.check_in_guests([@guest_tom]))
   end
 
-  def test_check_seats_available
-    assert_equal()
+  def test_check_out_guests__one_guest
+    @room_glencoe.check_out_guests([@guest_glen])
+    assert_equal("Martin", @room_glencoe.guests[0].name)
   end
+
+  def test_check_out_guests__all
+    @room_glencoe.check_out_guests("all")
+    assert_equal(0, @room_glencoe.guests.count)
+  end
+
 
 end
