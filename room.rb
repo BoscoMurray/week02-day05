@@ -43,6 +43,7 @@ class Room
 
   def check_in_guests(guests)
     paying = paying_guests(guests)
+    binding.pry
     return "No room at the inn!" if paying == []
     paying.map do
       |guest| @guests << guest

@@ -1,5 +1,6 @@
 GUEST
 name - String
+wallet - Integer
 
 
 ROOM
@@ -7,6 +8,8 @@ name - String
 spaces - Integer
 guests - Array
 songs - Array
+rental_fee - Integer
+balance - Integer
 
 
 SONG
