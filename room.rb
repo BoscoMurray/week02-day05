@@ -1,5 +1,3 @@
-require('pry')
-
 class Room
   attr_reader :name, :seats_available, :guests, :songs, :rental_fee, :room_balance
 
@@ -43,7 +41,6 @@ class Room
 
   def check_in_guests(guests)
     paying = paying_guests(guests)
-    binding.pry
     return "No room at the inn!" if paying == []
     paying.map do
       |guest| @guests << guest
