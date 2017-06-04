@@ -12,15 +12,15 @@ class TestRoom < MiniTest::Test
     @song_cw = Song.new("Chip Wickham", "Red Planet")
     @song_hm = Song.new("Happy Mondays", "Step On")
 
-    @guest_glen = Guest.new("Glen")
-    @guest_martin = Guest.new("Martin")
-    @guest_tom = Guest.new("Tom")
-    guests = [@guest_glen, @guest_martin]
+    @guest_glen = Guest.new("Glen", 10)
+    @guest_martin = Guest.new("Martin", 100)
+    @guest_tom = Guest.new("Tom", 1)
+    @guests = [@guest_glen, @guest_martin]
 
-    @room_glencoe = Room.new("Glencoe", 2, 40)
-    @room_nevis = Room.new("Nevis", 10, 100)
+    @room_glencoe = Room.new("Glencoe", 2, 2)
+    @room_nevis = Room.new("Nevis", 10, 2)
 
-    @room_glencoe.check_in_guests(guests)
+    @room_glencoe.check_in_guests(@guests)
   end
 
   def test_room_class_returns_rooms
@@ -45,6 +45,26 @@ class TestRoom < MiniTest::Test
     assert_equal("Animone", @room_glencoe.songs[0].title)
   end
 
+  def test_get_room_balance
+    assert_equal(0, @room_nevis.room_balance)
+  end
+
+  def test_update_room_balance
+    assert_equal(4, @room_glencoe.room_balance)
+  end
+
+  def test_check_guest_can_pay__not_enough_bitcoins
+    assert_nil(@room_nevis.check_guest_can_pay(@guest_tom))
+  end
+
+  def test_check_guest_can_pay__yes
+    assert_equal(true, @room_nevis.check_guest_can_pay(@guest_martin))
+  end
+
+  def test_paying_guests
+    assert_equal(2, @room_nevis.paying_guests(@guests).count)
+  end
+
   def test_check_in_guests
     assert_equal(2, @room_glencoe.guests.count)
   end
@@ -62,6 +82,5 @@ class TestRoom < MiniTest::Test
     @room_glencoe.check_out_guests("all")
     assert_equal(0, @room_glencoe.guests.count)
   end
-
 
 end

@@ -1,5 +1,7 @@
+require('pry')
+
 class Room
-  attr_reader :name, :seats_available, :guests, :songs, :rental_fee
+  attr_reader :name, :seats_available, :guests, :songs, :rental_fee, :room_balance
 
   @@rooms = []
 
@@ -10,6 +12,7 @@ class Room
     @rental_fee = rental_fee
     @guests = []
     @songs = []
+    @room_balance = 0
   end
 
   def Room.rooms
@@ -24,11 +27,28 @@ class Room
     @songs << song    
   end
 
+  def update_room_balance
+    @room_balance += @rental_fee
+  end
+
+  def check_guest_can_pay(guest)
+    return true if guest.bitcoin >= @rental_fee
+  end
+
+  def paying_guests(guests)
+    paying_guests = []
+    guests.map { |guest| paying_guests << guest if check_guest_can_pay(guest) }
+    return paying_guests
+  end
+
   def check_in_guests(guests)
-    return "No room at the inn!" if guests.count > @seats_available
-    guests.map do
+    paying = paying_guests(guests)
+    return "No room at the inn!" if paying == []
+    paying.map do
       |guest| @guests << guest
       @seats_available -= 1
+      update_room_balance
+      guest.update_bitcoin_balance(@rental_fee)
     end
   end
 
@@ -41,8 +61,6 @@ class Room
         @seats_available += 1
       end
     end
-    # @guests = [] if leaving_guests == "all"
-    # leaving_guests.each { |guest| @guests.delete(guest) } if leaving_guests != "all"
   end
 
 end
