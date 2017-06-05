@@ -15,6 +15,7 @@ class TestRoom < MiniTest::Test
     @guest_glen = Guest.new("Glen", 10)
     @guest_martin = Guest.new("Martin", 100)
     @guest_tom = Guest.new("Tom", 1)
+    @guest_steven = Guest.new("Steven", 2)
     @guests = [@guest_glen, @guest_martin]
 
     @room_glencoe = Room.new("Glencoe", 2, 2)
@@ -70,7 +71,7 @@ class TestRoom < MiniTest::Test
   end
 
   def test_check_in_guests__no_seats_available
-    assert_equal("No room at the inn!", @room_glencoe.check_in_guests([@guest_tom]))
+    assert_equal("No room at the inn!", @room_glencoe.check_in_guests([@guest_steven]))
   end
 
   def test_check_out_guests__one_guest

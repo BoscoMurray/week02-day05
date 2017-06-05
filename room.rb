@@ -41,7 +41,8 @@ class Room
 
   def check_in_guests(guests)
     paying = paying_guests(guests)
-    return "No room at the inn!" if paying == []
+    return "No paying guests to check in." if paying.count == 0
+    return "No room at the inn!" if paying.count > @seats_available
     paying.map do
       |guest| @guests << guest
       @seats_available -= 1
